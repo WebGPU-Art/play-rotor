@@ -29,14 +29,14 @@
                   :color $ [] 0.3 0.3 0.9 1.0
                   :size 8
                 fn (move d!)
-                  d! $ :: :control-a $ :: :v3 & move
+                  d! $ Op :control-a move
               comp-drag-point
                 {}
                   :position $ v3-to-list $ :control-b store
                   :color $ [] 0.9 0.9 0.1 1.0
                   :size 8
                 fn (move d!)
-                  d! $ :: :control-b $ :: :v3 & move
+                  d! $ Op :control-b move
               let
                   p0 $ [] 80 40 0
                   p1 $ [] 80 120 0
@@ -46,11 +46,13 @@
                   a $ :control-a store
                   b $ :control-b store
                   use-rotor-a $ fn (p)
-                    as-v3-list $ ga3:reflect (ga3:from-v3-list p) (ga3:from-v3 a)
+                    as-v3-list $ ga3:reflect (ga3:from-v3-list p)
+                      ga3:from-v3-list $ v3-to-list a
                   use-rotor-ab $ fn (p)
                     as-v3-list $ ga3:reflect
-                      ga3:reflect (ga3:from-v3-list p) (ga3:from-v3 a)
-                      ga3:from-v3 b
+                      ga3:reflect (ga3:from-v3-list p)
+                        ga3:from-v3-list $ v3-to-list a
+                      ga3:from-v3-list $ v3-to-list b
                   a-line 2.0
                   b-line 5.1
                   shape-0 -1.2
@@ -97,7 +99,8 @@
                       grid-perp-to b write! (* 0.2 w) b-line 31
                   :shader lines-wgsl
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'JsObject)
+            :args $ [] 'app.state/Store
         'grid-perp-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn grid-perp-to (v write! w m scale)
             let
@@ -139,7 +142,7 @@
         'v3-list-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def v3-list-0 ([] 0 0 0)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'List 'Number
         'v3-to-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn v3-to-list (v)
             match v $
@@ -161,6 +164,7 @@
             geometric.core :refer $ ga3:from-v3-list ga3:as-v3-list ga3:reflect ga3:from-v3
             lagopus.comp.cube :refer $ comp-cube
             quaternion.vector :refer $ v-scale v+ v-cross v-normalize v3
+            app.state :refer $ Op
     'app.config $ %{} 'FileEntry
       :defs $ {}
         'dev? $ %{} 'CodeEntry (:doc |)
@@ -187,64 +191,74 @@
       :defs $ {}
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defatom *store
-            {} (:tab :cube)
-              :control-a $ :: :v3 200 10 0
-              :control-b $ :: :v3 400 80 -80
+            %{} Store (:tab :cube)
+              :control-a $ v3 200 10 0
+              :control-b $ v3 400 80 -80
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Ref 'app.state/Store
         'canvas $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def canvas (query-canvas!)
           :examples $ []
           :schema $ :: 'lagopus.browser/Canvas
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
-            if dev? $ js/console.log op
+            if dev? $ console-log! $ str op
             let
                 store @*store
-                next-store $ tag-match op
-                  (:states cursor s) (update-states store cursor s)
+                next-store $ match op
                   (:tab t) (assoc store :tab t)
                   (:control-a v) (assoc store :control-a v)
                   (:control-b v) (assoc store :control-b v)
                   _ $ do (eprintln ":unknown op" op) store
               if (not= next-store store) (reset! *store next-store)
+            , &unit
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ [] 'app.state/Op
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             hint-fn $ {} $ :async true
             if dev? $ load-console-formatter!
             js-await $ initializeContext
             initializeCanvasTextures
-            reset-clear-color! $ either bg-color $ {} (:r 0.18) (:g 0.2) (:b 0.36) (:a 1)
+            reset-clear-color! $ .unwrap-or bg-color $ :: :rgba 0.18 0.2 0.36 1
             render-app!
             renderControl
             startControlLoop 10 onControlEvent
             set! js/window.__lagopusHandleCompilationInfo handle-compilation
             set! js/window.onresize $ fn (e) (resetCanvasSize canvas) (initializeCanvasTextures) (paintLagopusTree)
             resetCanvasSize canvas
-            add-watch *store :change $ fn (next store) (render-app!)
+            add-watch! *store :change $ fn (next store) (render-app!)
             setupMouseEvents canvas
             if remote-control? $ setupRemoteControl
+            , &unit
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ []
+            :features $ #{} :js-ffi
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
-              do (reset-memof1-caches!) (render-app!) (remove-watch *store :change)
-                add-watch *store :change $ fn (next store) (render-app!)
+              do (reset-memof1-caches!) (render-app!) (remove-watch! *store :change)
+                add-watch! *store :change $ fn (next store) (render-app!)
                 println |Reloaded.
                 hud! |ok~ |OK
               hud! |error build-errors
+            , &unit
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ []
+            :features $ #{} :js-ffi
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             let
                 tree $ comp-container @*store
               renderLagopusTree tree dispatch!
+            , &unit
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ []
+            :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
@@ -256,7 +270,22 @@
             |./calcit.build-errors :default build-errors
             memof.once :refer $ reset-memof1-caches!
             lagopus.util :refer $ handle-compilation reset-clear-color!
-            lagopus.cursor :refer $ update-states
             lagopus.config :refer $ bg-color
             |@triadica/lagopus/lib/remote-control.mjs :refer $ setupRemoteControl
             lagopus.browser :refer $ query-canvas!
+            app.state :refer $ Store Op
+            quaternion.vector :refer $ v3
+            js-ffi.shared :refer $ console-log!
+    'app.state $ %{} 'FileEntry
+      :defs $ {}
+        'Op $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum Op (:tab 'Tag) (:control-a 'quaternion.vector/V3) (:control-b 'quaternion.vector/V3)
+          :examples $ []
+          :schema $ :: 'EnumDef
+        'Store $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct Store (:tab 'Tag) (:control-a 'quaternion.vector/V3) (:control-b 'quaternion.vector/V3)
+          :examples $ []
+          :schema $ :: 'StructDef
+      :ns $ %{} 'NsEntry (:doc |)
+        :code $ quote $ ns app.state
+          :require $ quaternion.vector :refer $ v3
