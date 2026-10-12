@@ -231,6 +231,7 @@
             add-watch! *store :change $ fn (next store) (render-app!)
             setupMouseEvents canvas
             if remote-control? $ setupRemoteControl
+            paintLagopusTree
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -254,6 +255,7 @@
             let
                 tree $ comp-container @*store
               renderLagopusTree tree dispatch!
+              paintLagopusTree
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
