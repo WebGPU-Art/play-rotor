@@ -137,11 +137,13 @@
           :schema $ :: 'Dynamic
         'v3-to-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn v3-to-list (v)
-            tag-match v $
+            match v $
               :v3 x y z
               [] x y z
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'quaternion.vector/V3
+            :return $ :: 'List 'Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
@@ -204,7 +206,8 @@
           :examples $ []
           :schema $ :: 'Dynamic
         'main! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn main! () (hint-fn async)
+          :code $ quote $ defn main! ()
+            hint-fn $ {} $ :async true
             if dev? $ load-console-formatter!
             js-await $ initializeContext
             initializeCanvasTextures
