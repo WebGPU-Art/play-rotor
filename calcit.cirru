@@ -101,10 +101,9 @@
         'grid-perp-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn grid-perp-to (v write! w m scale)
             let
-                v-list $ v3-to-list v
                 n 10
-                v1-base $ v-normalize $ v-cross v-list ([] 0 0 -1)
-                v2-base $ v-normalize $ v-cross v-list v1-base
+                v1-base $ v-normalize $ v-cross v (v3 0 0 -1)
+                v2-base $ v-normalize $ v-cross v v1-base
                 v1 $ v-scale v1-base scale
                 v2 $ v-scale v2-base scale
               &doseq
@@ -113,10 +112,10 @@
                     d $ v-scale v1 x
                   write! $ []
                     :: :vertex
-                      v+ d $ v-scale v2 n
+                      v3-to-list $ v+ d $ v-scale v2 n
                       , w m
                     :: :vertex
-                      v+ d $ v-scale v2 $ negate n
+                      v3-to-list $ v+ d $ v-scale v2 (negate n)
                       , w m
                     , break-mark
               &doseq
@@ -125,14 +124,18 @@
                     d $ v-scale v2 x
                   write! $ []
                     :: :vertex
-                      v+ d $ v-scale v1 n
+                      v3-to-list $ v+ d $ v-scale v1 n
                       , w m
                     :: :vertex
-                      v+ d $ v-scale v1 $ negate n
+                      v3-to-list $ v+ d $ v-scale v1 (negate n)
                       , w m
                     , break-mark
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ [] 'quaternion.vector/V3
+              :: 'Fn $ {} (:return 'Unit)
+                :args $ [] $ :: 'List 'Enum
+              , 'Number 'Number 'Number
         'v3-list-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def v3-list-0 ([] 0 0 0)
           :examples $ []
@@ -190,9 +193,9 @@
           :examples $ []
           :schema $ :: 'Dynamic
         'canvas $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ def canvas (js/document.querySelector |canvas)
+          :code $ quote $ def canvas (query-canvas!)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'lagopus.browser/Canvas
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             if dev? $ js/console.log op
@@ -256,3 +259,4 @@
             lagopus.cursor :refer $ update-states
             lagopus.config :refer $ bg-color
             |@triadica/lagopus/lib/remote-control.mjs :refer $ setupRemoteControl
+            lagopus.browser :refer $ query-canvas!
