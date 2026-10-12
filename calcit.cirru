@@ -13,11 +13,13 @@
         'as-v3-list $ %{} 'CodeEntry
           :doc "|non-zero zero values, need a custom function, for now.\n\nTODO move to core."
           :code $ quote $ defn as-v3-list (v)
-            tag-match v $
+            match v $
               :ga3 s x y z xy yz zx xyz
               [] x y z
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'geometric.core/Ga3
+            :return $ :: 'List 'Number
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
             group nil (comp-axis)
