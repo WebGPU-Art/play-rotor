@@ -190,7 +190,7 @@
     'app.main $ %{} 'FileEntry
       :defs $ {}
         '*store $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *store
+          :code $ quote $ defref *store
             %{} Store (:tab :cube)
               :control-a $ v3 200 10 0
               :control-b $ v3 400 80 -80
