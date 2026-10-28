@@ -46,9 +46,15 @@
                   a $ :control-a store
                   b $ :control-b store
                   use-rotor-a $ fn (p)
+                    hint-fn $ {}
+                      :args $ [] $ :: 'List 'Number
+                      :return $ :: 'List 'Number
                     as-v3-list $ ga3:reflect (ga3:from-v3-list p)
                       ga3:from-v3-list $ v3-to-list a
                   use-rotor-ab $ fn (p)
+                    hint-fn $ {}
+                      :args $ [] $ :: 'List 'Number
+                      :return $ :: 'List 'Number
                     as-v3-list $ ga3:reflect
                       ga3:reflect (ga3:from-v3-list p)
                         ga3:from-v3-list $ v3-to-list a
@@ -60,6 +66,12 @@
                   shape-2 5.1
                 comp-polylines-marked $ {}
                   :writer $ fn (write!)
+                    hint-fn $ {}
+                      :args $ [] $ :: 'Fn
+                        {}
+                          :args $ [] $ :: 'List 'Enum
+                          :return 'Unit
+                      :return 'Unit
                     write! $ [] (:: :vertex p0 w shape-0) (:: :vertex p1 w shape-0) (:: :vertex p2 w shape-0) (:: :vertex p3 w shape-0) (:: :vertex p0 w shape-0) (:: :vertex p2 w shape-0) break-mark (:: :vertex p0 w shape-0) (:: :vertex p1 w shape-0) (:: :vertex p3 w shape-0) break-mark
                     write! $ []
                       :: :vertex (use-rotor-a p0) w shape-1
@@ -85,18 +97,16 @@
                         :: :vertex (use-rotor-ab p1) w shape-2
                         :: :vertex (use-rotor-ab p3) w shape-2
                         , break-mark
-                    do
-                      write! $ []
-                        :: :vertex v3-list-0 (* 1 w) a-line
-                        :: :vertex (v3-to-list a) (* 0.1 w) a-line
-                        , break-mark
-                      grid-perp-to a write! (* 0.2 w) a-line 47
-                    do
-                      write! $ []
-                        :: :vertex v3-list-0 (* 0.5 w) b-line
-                        :: :vertex (v3-to-list b) (* 0.5 w) b-line
-                        , break-mark
-                      grid-perp-to b write! (* 0.2 w) b-line 31
+                    write! $ []
+                      :: :vertex v3-list-0 (* 1 w) a-line
+                      :: :vertex (v3-to-list a) (* 0.1 w) a-line
+                      , break-mark
+                    grid-perp-to a write! (* 0.2 w) a-line 47
+                    write! $ []
+                      :: :vertex v3-list-0 (* 0.5 w) b-line
+                      :: :vertex (v3-to-list b) (* 0.5 w) b-line
+                      , break-mark
+                    grid-perp-to b write! (* 0.2 w) b-line 31
                   :shader lines-wgsl
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'JsObject)
@@ -110,7 +120,9 @@
                 v1 $ v-scale v1-base scale
                 v2 $ v-scale v2-base scale
               &doseq
-                x $ range-bothway 0 n
+                x $ range
+                  inc $ negate n
+                  , n
                 let
                     d $ v-scale v1 x
                   write! $ []
@@ -122,7 +134,9 @@
                       , w m
                     , break-mark
               &doseq
-                x $ range-bothway 0 n
+                x $ range
+                  inc $ negate n
+                  , n
                 let
                     d $ v-scale v2 x
                   write! $ []
@@ -190,10 +204,8 @@
     'app.main $ %{} 'FileEntry
       :defs $ {}
         '*store $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *store
-            %{} Store (:tab :cube)
-              :control-a $ v3 200 10 0
-              :control-b $ v3 400 80 -80
+          :code $ quote $ defref *store
+            Store :tab :cube :control-a (v3 200 10 0) :control-b $ v3 400 80 -80
           :examples $ []
           :schema $ :: 'Ref 'app.state/Store
         'canvas $ %{} 'CodeEntry (:doc |)
