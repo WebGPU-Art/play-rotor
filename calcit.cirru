@@ -17,9 +17,8 @@
               :ga3 s x y z xy yz zx xyz
               [] x y z
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'geometric.core/Ga3
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn geometric.core/Ga3
+            -> $ List Number
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
             group nil (comp-axis)
@@ -46,15 +45,13 @@
                   a $ :control-a store
                   b $ :control-b store
                   use-rotor-a $ fn (p)
-                    hint-fn $ {}
-                      :args $ [] $ :: 'List 'Number
-                      :return $ :: 'List 'Number
+                    hint-fn $ Fn (List Number)
+                      -> $ List Number
                     as-v3-list $ ga3:reflect (ga3:from-v3-list p)
                       ga3:from-v3-list $ v3-to-list a
                   use-rotor-ab $ fn (p)
-                    hint-fn $ {}
-                      :args $ [] $ :: 'List 'Number
-                      :return $ :: 'List 'Number
+                    hint-fn $ Fn (List Number)
+                      -> $ List Number
                     as-v3-list $ ga3:reflect
                       ga3:reflect (ga3:from-v3-list p)
                         ga3:from-v3-list $ v3-to-list a
@@ -66,12 +63,9 @@
                   shape-2 5.1
                 comp-polylines-marked $ {}
                   :writer $ fn (write!)
-                    hint-fn $ {}
-                      :args $ [] $ :: 'Fn
-                        {}
-                          :args $ [] $ :: 'List 'Enum
-                          :return 'Unit
-                      :return 'Unit
+                    hint-fn $ Fn
+                      Fn (List Enum) (-> Unit)
+                      -> Unit
                     write! $ [] (:: :vertex p0 w shape-0) (:: :vertex p1 w shape-0) (:: :vertex p2 w shape-0) (:: :vertex p3 w shape-0) (:: :vertex p0 w shape-0) (:: :vertex p2 w shape-0) break-mark (:: :vertex p0 w shape-0) (:: :vertex p1 w shape-0) (:: :vertex p3 w shape-0) break-mark
                     write! $ []
                       :: :vertex (use-rotor-a p0) w shape-1
@@ -109,8 +103,7 @@
                     grid-perp-to b write! (* 0.2 w) b-line 31
                   :shader lines-wgsl
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'JsObject)
-            :args $ [] 'app.state/Store
+          :schema $ quote $ Fn app.state/Store (-> JsObject)
         'grid-perp-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn grid-perp-to (v write! w m scale)
             let
@@ -148,24 +141,21 @@
                       , w m
                     , break-mark
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'quaternion.vector/V3
-              :: 'Fn $ {} (:return 'Unit)
-                :args $ [] $ :: 'List 'Enum
-              , 'Number 'Number 'Number
+          :schema $ quote $ Fn quaternion.vector/V3
+            Fn (List Enum) (-> Unit)
+            , Number Number Number (-> Unit)
         'v3-list-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def v3-list-0 ([] 0 0 0)
           :examples $ []
-          :schema $ :: 'List 'Number
+          :schema $ quote $ List Number
         'v3-to-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn v3-to-list (v)
             match v $
               :v3 x y z
               [] x y z
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'quaternion.vector/V3
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn quaternion.vector/V3
+            -> $ List Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
@@ -185,20 +175,19 @@
           :code $ quote $ def dev?
             &= |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
         'inline-shader $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro inline-shader (path)
             read-file $ str |shaders/ path |.wgsl
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{} :fs-read
-            :expansion $ :: 'Expr 'String
-            :required $ [] $ :: 'Expr 'String
+          :schema $ quote $ Macro (Expr String)
+            -> $ Expr String
+            :capabilities :fs-read
         'remote-control? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def remote-control?
             .some? $ get-env |remote-control
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.config
     'app.main $ %{} 'FileEntry
@@ -207,11 +196,11 @@
           :code $ quote $ defref *store
             Store :tab :cube :control-a (v3 200 10 0) :control-b $ v3 400 80 -80
           :examples $ []
-          :schema $ :: 'Ref 'app.state/Store
+          :schema $ quote $ Ref app.state/Store
         'canvas $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def canvas (query-canvas!)
           :examples $ []
-          :schema $ :: 'lagopus.browser/Canvas
+          :schema $ quote lagopus.browser/Canvas
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             if dev? $ console-log! $ str op
@@ -225,11 +214,9 @@
               if (not= next-store store) (reset! *store next-store)
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'app.state/Op
+          :schema $ quote $ Fn app.state/Op (-> Unit)
         'main! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn main! ()
-            hint-fn $ {} $ :async true
+          :code $ quote $ defn main! () (hint-fn Async)
             if dev? $ load-console-formatter!
             js-await $ initializeContext
             initializeCanvasTextures
@@ -246,9 +233,7 @@
             paintLagopusTree
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
@@ -259,9 +244,7 @@
               hud! |error build-errors
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             let
@@ -270,9 +253,7 @@
               paintLagopusTree
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
@@ -295,11 +276,11 @@
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op (:tab 'Tag) (:control-a 'quaternion.vector/V3) (:control-b 'quaternion.vector/V3)
           :examples $ []
-          :schema $ :: 'EnumDef
+          :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Store (:tab 'Tag) (:control-a 'quaternion.vector/V3) (:control-b 'quaternion.vector/V3)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.state
           :require $ quaternion.vector :refer $ v3
