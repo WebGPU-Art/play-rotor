@@ -4,11 +4,26 @@
 
 ### Workflow
 
-使用者影响：本轮升级正式 Calcit / @calcit/procs 0.31.0。四个点、两个拖动控制点及原反射公式不变，`hud!` 页面报错仍保留。命名空间状态使用 `defref`，保留热重载状态；网格的两处旧 `range-bothway 0 n` 改为 `range (inc (negate n)) n`，原 n=10 的 -9…9 范围及顺序不变。
+使用者影响：CLI / `@calcit/procs` 配对正式 **0.32.1**，需要重新安装依赖并生成 JS。
+四个点、两个拖动控制点、反射公式、向量名义身份和 `hud!` 页面报错保持。
+官方 formatter 迁移类型存储语法，16 个定义的代码、schema 和元数据在规范化前后一致。
 
-依赖使用已发布的 Geometric 0.0.14、Lagopus 0.5.13、Memof 0.0.41、Quaternion 0.2.17 和 JS FFI 0.2.7。两个局部反射函数明确接受/返回 List<Number>，writer 使用实际 List<Enum>→Unit 回调合同；清理冗余 do 和旧 Struct 构造，不新增强转、编译器规则或类型豁免。
+根依赖配对 Memof 0.0.43、Geometric 0.0.16、Quaternion 0.2.19、JS FFI 0.2.9；
+Lagopus 0.5.15 的分段标记补齐准确 Enum 类型，满足原 `List<Enum> -> Unit` writer。
+模块修复见 [Lagopus #39](https://github.com/WebGPU-Art/lagopus/pull/39)，不通过消费者断言／强转或扩大 Dynamic 绕过。
 
-本地 113 个全定义、完整 strict workflow 和 Vite 构建通过；实际 WebGPU 页面验证默认图形及两个控制点拖动后的反射/网格重绘，浏览器 warning/error 为空。此前 0.30.0 候选的8项 native数值对照只属于历史验收，不冒称本轮完整数值测试；本轮仍需对应PR的远端CI与评审通过，不合并部署。
+原 0.31 迁移中的 `defref`、坐标 List 与两类 V3 的受检转换、-9…9 网格顺序保持。
+不改变 Store/Op、几何算法、CDN 与服务器部署目录。npm 新解析候选版本包龄按本轮约定
+设为 60 分钟，无例外；正常复用 lock 不重新等待，lock 仅更新 procs。
+原 CI 门禁保持，多命令步骤显式遇错退出，移除额外全局安装脚本启用；
+不增加脚本／测试框架，COS 仅用 Action 内置 verify。PR 只检查和构建，不合并或部署。
+
+项目没有 definition-attached tests，空测试不当作通过；此前 0.30.0 的八项 native
+数值对照只属于历史验收，不冒称当前完整数值测试。最终正式依赖图下，113/113 全定义（含依赖）、16/16 项目定义、完整 strict
+passed / diagnostics=[]、Caps 五模块和工具链、immutable、JS 生成／语法检查与原 CDN
+构建均通过；deprecated-call、dynamic-method、应用 unsafe 为零。
+实际默认图形、蓝／黄两个控制点拖动后的反射和网格重绘、刷新回默认场景均通过，
+error/warn 为空。未启用 remote-control、未做物理 gamepad 验收；原反射公式不以截图替代数学正确性证明。
 
 The source is `calcit.cirru`; no `compact.cirru` or `package.cirru` is required.
 Use Node 24 and Yarn 4.18.0:
