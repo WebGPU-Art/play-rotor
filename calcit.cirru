@@ -274,11 +274,11 @@
     'app.state $ %{} 'FileEntry
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defenum Op (:tab 'Tag) (:control-a 'quaternion.vector/V3) (:control-b 'quaternion.vector/V3)
+          :code $ quote $ defenum Op (:tab Tag) (:control-a quaternion.vector/V3) (:control-b quaternion.vector/V3)
           :examples $ []
           :schema $ quote EnumDef
         'Store $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct Store (:tab 'Tag) (:control-a 'quaternion.vector/V3) (:control-b 'quaternion.vector/V3)
+          :code $ quote $ defstruct Store (:tab Tag) (:control-a quaternion.vector/V3) (:control-b quaternion.vector/V3)
           :examples $ []
           :schema $ quote StructDef
       :ns $ %{} 'NsEntry (:doc |)
