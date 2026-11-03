@@ -4,12 +4,12 @@
 
 ### Workflow
 
-使用者影响：CLI / `@calcit/procs` 配对正式 **0.32.1**，需要重新安装依赖并生成 JS。
+使用者影响：CLI / `@calcit/procs` 配对正式 **0.34.3**，需要重新安装依赖并生成 JS。
 四个点、两个拖动控制点、反射公式、向量名义身份和 `hud!` 页面报错保持。
 官方 formatter 迁移类型存储语法，16 个定义的代码、schema 和元数据在规范化前后一致。
 
-根依赖配对 Memof 0.0.43、Geometric 0.0.16、Quaternion 0.2.19、JS FFI 0.2.9；
-Lagopus 0.5.15 的分段标记补齐准确 Enum 类型，满足原 `List<Enum> -> Unit` writer。
+根依赖配对 Memof 0.0.44、Geometric 0.0.17、Quaternion 0.2.20、JS FFI 0.2.10；
+Lagopus 0.5.16（Calcit 0.34.3）沿用 0.5.15 的分段标记补齐准确 Enum 类型，满足原 `List<Enum> -> Unit` writer。
 模块修复见 [Lagopus #39](https://github.com/WebGPU-Art/lagopus/pull/39)，不通过消费者断言／强转或扩大 Dynamic 绕过。
 
 原 0.31 迁移中的 `defref`、坐标 List 与两类 V3 的受检转换、-9…9 网格顺序保持。
