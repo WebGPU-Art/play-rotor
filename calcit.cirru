@@ -51,72 +51,13 @@
                     Fn app.state/Op $ -> Unit
                     -> Unit
                   d! $ Op :control-b move
-              let
-                  p0 $ [] 80 40 0
-                  p1 $ [] 80 120 0
-                  p2 $ [] 120 120 40
-                  p3 $ [] 160 40 0
-                  w 2
-                  a $ :control-a store
-                  b $ :control-b store
-                  use-rotor-a $ fn (p)
-                    hint-fn $ Fn (List Number)
-                      -> $ List Number
-                    as-v3-list $ ga3:reflect (ga3:from-v3-list p)
-                      ga3:from-v3-list $ v3-to-list a
-                  use-rotor-ab $ fn (p)
-                    hint-fn $ Fn (List Number)
-                      -> $ List Number
-                    as-v3-list $ ga3:reflect
-                      ga3:reflect (ga3:from-v3-list p)
-                        ga3:from-v3-list $ v3-to-list a
-                      ga3:from-v3-list $ v3-to-list b
-                  a-line 2.0
-                  b-line 5.1
-                  shape-0 -1.2
-                  shape-1 2.0
-                  shape-2 5.1
-                comp-polylines-marked $ {}
-                  :writer $ fn (write!)
-                    hint-fn $ Fn
-                      Fn (List app.comp.container/PolylineItem) (-> Unit)
-                      -> Unit
-                    write! $ [] (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p1 w shape-0) (app.comp.container/RotorPoint :vertex p2 w shape-0) (app.comp.container/RotorPoint :vertex p3 w shape-0) (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p2 w shape-0) break-mark (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p1 w shape-0) (app.comp.container/RotorPoint :vertex p3 w shape-0) break-mark
-                    write! $ []
-                      app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
-                      app.comp.container/RotorPoint :vertex (use-rotor-a p1) w shape-1
-                      app.comp.container/RotorPoint :vertex (use-rotor-a p2) w shape-1
-                      app.comp.container/RotorPoint :vertex (use-rotor-a p3) w shape-1
-                      app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
-                      app.comp.container/RotorPoint :vertex (use-rotor-a p2) w shape-1
-                      , break-mark
-                        app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
-                        app.comp.container/RotorPoint :vertex (use-rotor-a p1) w shape-1
-                        app.comp.container/RotorPoint :vertex (use-rotor-a p3) w shape-1
-                        , break-mark
-                    write! $ []
-                      app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
-                      app.comp.container/RotorPoint :vertex (use-rotor-ab p1) w shape-2
-                      app.comp.container/RotorPoint :vertex (use-rotor-ab p2) w shape-2
-                      app.comp.container/RotorPoint :vertex (use-rotor-ab p3) w shape-2
-                      app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
-                      app.comp.container/RotorPoint :vertex (use-rotor-ab p2) w shape-2
-                      , break-mark
-                        app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
-                        app.comp.container/RotorPoint :vertex (use-rotor-ab p1) w shape-2
-                        app.comp.container/RotorPoint :vertex (use-rotor-ab p3) w shape-2
-                        , break-mark
-                    write! $ []
-                      app.comp.container/RotorPoint :vertex v3-list-0 (* 1 w) a-line
-                      app.comp.container/RotorPoint :vertex (v3-to-list a) (* 0.1 w) a-line
-                      , break-mark
-                    grid-perp-to a write! (* 0.2 w) a-line 47
-                    write! $ []
-                      app.comp.container/RotorPoint :vertex v3-list-0 (* 0.5 w) b-line
-                      app.comp.container/RotorPoint :vertex (v3-to-list b) (* 0.5 w) b-line
-                      , break-mark
-                    grid-perp-to b write! (* 0.2 w) b-line 31
-                  :shader lines-wgsl
+              comp-polylines-marked $ {}
+                :writer $ fn (write!)
+                  hint-fn $ Fn
+                    Fn (List app.comp.container/PolylineItem) (-> Unit)
+                    -> Unit
+                  write-rotor! store write!
+                :shader lines-wgsl
           :examples $ []
           :schema $ quote $ Fn app.state/Store (-> JsObject)
         'grid-perp-to $ %{} 'CodeEntry (:doc |)
@@ -171,6 +112,110 @@
           :examples $ []
           :schema $ quote $ Fn quaternion.vector/V3
             -> $ List Number
+        'write-rotor! $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn write-rotor! (store write!)
+            let
+                p0 $ [] 80 40 0
+                p1 $ [] 80 120 0
+                p2 $ [] 120 120 40
+                p3 $ [] 160 40 0
+                w 2
+                a $ :control-a store
+                b $ :control-b store
+                use-rotor-a $ fn (p)
+                  hint-fn $ Fn (List Number)
+                    -> $ List Number
+                  as-v3-list $ ga3:reflect (ga3:from-v3-list p)
+                    ga3:from-v3-list $ v3-to-list a
+                use-rotor-ab $ fn (p)
+                  hint-fn $ Fn (List Number)
+                    -> $ List Number
+                  as-v3-list $ ga3:reflect
+                    ga3:reflect (ga3:from-v3-list p)
+                      ga3:from-v3-list $ v3-to-list a
+                    ga3:from-v3-list $ v3-to-list b
+                a-line 2.0
+                b-line 5.1
+                shape-0 -1.2
+                shape-1 2.0
+                shape-2 5.1
+              write! $ [] (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p1 w shape-0) (app.comp.container/RotorPoint :vertex p2 w shape-0) (app.comp.container/RotorPoint :vertex p3 w shape-0) (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p2 w shape-0) break-mark (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p1 w shape-0) (app.comp.container/RotorPoint :vertex p3 w shape-0) break-mark
+              write! $ []
+                app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
+                app.comp.container/RotorPoint :vertex (use-rotor-a p1) w shape-1
+                app.comp.container/RotorPoint :vertex (use-rotor-a p2) w shape-1
+                app.comp.container/RotorPoint :vertex (use-rotor-a p3) w shape-1
+                app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
+                app.comp.container/RotorPoint :vertex (use-rotor-a p2) w shape-1
+                , break-mark
+                  app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
+                  app.comp.container/RotorPoint :vertex (use-rotor-a p1) w shape-1
+                  app.comp.container/RotorPoint :vertex (use-rotor-a p3) w shape-1
+                  , break-mark
+              write! $ []
+                app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
+                app.comp.container/RotorPoint :vertex (use-rotor-ab p1) w shape-2
+                app.comp.container/RotorPoint :vertex (use-rotor-ab p2) w shape-2
+                app.comp.container/RotorPoint :vertex (use-rotor-ab p3) w shape-2
+                app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
+                app.comp.container/RotorPoint :vertex (use-rotor-ab p2) w shape-2
+                , break-mark
+                  app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
+                  app.comp.container/RotorPoint :vertex (use-rotor-ab p1) w shape-2
+                  app.comp.container/RotorPoint :vertex (use-rotor-ab p3) w shape-2
+                  , break-mark
+              write! $ []
+                app.comp.container/RotorPoint :vertex v3-list-0 (* 1 w) a-line
+                app.comp.container/RotorPoint :vertex (v3-to-list a) (* 0.1 w) a-line
+                , break-mark
+              grid-perp-to a write! (* 0.2 w) a-line 47
+              write! $ []
+                app.comp.container/RotorPoint :vertex v3-list-0 (* 0.5 w) b-line
+                app.comp.container/RotorPoint :vertex (v3-to-list b) (* 0.5 w) b-line
+                , break-mark
+              grid-perp-to b write! (* 0.2 w) b-line 31
+          :examples $ []
+          :schema $ quote $ Fn app.state/Store
+            Fn (List app.comp.container/PolylineItem) (-> Unit)
+            -> Unit
+          :tests $ [] $ %{} 'TestEntry (:name |default-polyline-segments)
+            :code $ quote $ let
+                *previous $ ref $ assert-type (Option :none) (Option lagopus.comp.curves/MarkedPolylinePrevious)
+                *segments $ ref $ assert-type ([])
+                  List $ List lagopus.comp.curves/MarkedPolylineVertex
+                collect! $ fn (vertices)
+                  hint-fn $ Fn (List lagopus.comp.curves/MarkedPolylineVertex) (-> Unit)
+                  reset! *segments $ append @*segments vertices
+                  , &unit
+              write-rotor! @app.main/*store $ fn (items)
+                hint-fn $ Fn (List app.comp.container/PolylineItem) (-> Unit)
+                &doseq (item items)
+                  match item
+                    (app.comp.container/RotorPoint vertex) (lagopus.comp.curves/build-polyline-points-marked *previous vertex collect!)
+                    (lagopus.comp.curves/PolylineBreak marker) (lagopus.comp.curves/build-polyline-points-marked *previous marker collect!)
+                , &unit
+              assert= 99 $ .len @*segments
+              let
+                  first-shape $ .unwrap $ nth @*segments 0
+                  next-piece $ .unwrap $ nth @*segments 5
+                  first-grid $ .unwrap $ nth @*segments 22
+                  second-grid $ .unwrap $ nth @*segments 61
+                assert= first-shape next-piece
+                assert= (v3 80 40 0)
+                  match
+                    .unwrap $ nth first-shape 0
+                    (:vertex position _ _ _ _) position
+                assert= (v3 80 120 0)
+                  match
+                    .unwrap $ nth first-shape 1
+                    (:vertex position _ _ _ _) position
+                assert= 2 $ match
+                  .unwrap $ nth first-grid 0
+                  (:vertex _ _ _ _ mark) mark
+                assert= 5.1 $ match
+                  .unwrap $ nth second-grid 0
+                  (:vertex _ _ _ _ mark) mark
+              assert= (Option :none) @*previous
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require

@@ -46,6 +46,7 @@ jobs:
         git diff --quiet -- calcit.cirru
         calcit --check-only --all-defs --format json
         calcit fix --workflow strict --verify
+        calcit test app.comp.container/write-rotor! --require-match
     - name: Build frontend
       run: |
         set -euo pipefail
