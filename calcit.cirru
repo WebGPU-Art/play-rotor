@@ -10,6 +10,15 @@
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {}
+        'PolylineItem $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion PolylineItem app.comp.container/RotorPoint lagopus.comp.curves/PolylineBreak
+          :examples $ []
+          :schema $ quote UnionDef
+        'RotorPoint $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum RotorPoint
+            :vertex (List Number) Number Number
+          :examples $ []
+          :schema $ quote EnumDef
         'as-v3-list $ %{} 'CodeEntry
           :doc "|non-zero zero values, need a custom function, for now.\n\nTODO move to core."
           :code $ quote $ defn as-v3-list (v)
@@ -28,6 +37,9 @@
                   :color $ [] 0.3 0.3 0.9 1.0
                   :size 8
                 fn (move d!)
+                  hint-fn $ Fn quaternion.vector/V3
+                    Fn app.state/Op $ -> Unit
+                    -> Unit
                   d! $ Op :control-a move
               comp-drag-point
                 {}
@@ -35,6 +47,9 @@
                   :color $ [] 0.9 0.9 0.1 1.0
                   :size 8
                 fn (move d!)
+                  hint-fn $ Fn quaternion.vector/V3
+                    Fn app.state/Op $ -> Unit
+                    -> Unit
                   d! $ Op :control-b move
               let
                   p0 $ [] 80 40 0
@@ -64,41 +79,41 @@
                 comp-polylines-marked $ {}
                   :writer $ fn (write!)
                     hint-fn $ Fn
-                      Fn (List Enum) (-> Unit)
+                      Fn (List app.comp.container/PolylineItem) (-> Unit)
                       -> Unit
-                    write! $ [] (:: :vertex p0 w shape-0) (:: :vertex p1 w shape-0) (:: :vertex p2 w shape-0) (:: :vertex p3 w shape-0) (:: :vertex p0 w shape-0) (:: :vertex p2 w shape-0) break-mark (:: :vertex p0 w shape-0) (:: :vertex p1 w shape-0) (:: :vertex p3 w shape-0) break-mark
+                    write! $ [] (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p1 w shape-0) (app.comp.container/RotorPoint :vertex p2 w shape-0) (app.comp.container/RotorPoint :vertex p3 w shape-0) (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p2 w shape-0) break-mark (app.comp.container/RotorPoint :vertex p0 w shape-0) (app.comp.container/RotorPoint :vertex p1 w shape-0) (app.comp.container/RotorPoint :vertex p3 w shape-0) break-mark
                     write! $ []
-                      :: :vertex (use-rotor-a p0) w shape-1
-                      :: :vertex (use-rotor-a p1) w shape-1
-                      :: :vertex (use-rotor-a p2) w shape-1
-                      :: :vertex (use-rotor-a p3) w shape-1
-                      :: :vertex (use-rotor-a p0) w shape-1
-                      :: :vertex (use-rotor-a p2) w shape-1
+                      app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
+                      app.comp.container/RotorPoint :vertex (use-rotor-a p1) w shape-1
+                      app.comp.container/RotorPoint :vertex (use-rotor-a p2) w shape-1
+                      app.comp.container/RotorPoint :vertex (use-rotor-a p3) w shape-1
+                      app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
+                      app.comp.container/RotorPoint :vertex (use-rotor-a p2) w shape-1
                       , break-mark
-                        :: :vertex (use-rotor-a p0) w shape-1
-                        :: :vertex (use-rotor-a p1) w shape-1
-                        :: :vertex (use-rotor-a p3) w shape-1
+                        app.comp.container/RotorPoint :vertex (use-rotor-a p0) w shape-1
+                        app.comp.container/RotorPoint :vertex (use-rotor-a p1) w shape-1
+                        app.comp.container/RotorPoint :vertex (use-rotor-a p3) w shape-1
                         , break-mark
                     write! $ []
-                      :: :vertex (use-rotor-ab p0) w shape-2
-                      :: :vertex (use-rotor-ab p1) w shape-2
-                      :: :vertex (use-rotor-ab p2) w shape-2
-                      :: :vertex (use-rotor-ab p3) w shape-2
-                      :: :vertex (use-rotor-ab p0) w shape-2
-                      :: :vertex (use-rotor-ab p2) w shape-2
+                      app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
+                      app.comp.container/RotorPoint :vertex (use-rotor-ab p1) w shape-2
+                      app.comp.container/RotorPoint :vertex (use-rotor-ab p2) w shape-2
+                      app.comp.container/RotorPoint :vertex (use-rotor-ab p3) w shape-2
+                      app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
+                      app.comp.container/RotorPoint :vertex (use-rotor-ab p2) w shape-2
                       , break-mark
-                        :: :vertex (use-rotor-ab p0) w shape-2
-                        :: :vertex (use-rotor-ab p1) w shape-2
-                        :: :vertex (use-rotor-ab p3) w shape-2
+                        app.comp.container/RotorPoint :vertex (use-rotor-ab p0) w shape-2
+                        app.comp.container/RotorPoint :vertex (use-rotor-ab p1) w shape-2
+                        app.comp.container/RotorPoint :vertex (use-rotor-ab p3) w shape-2
                         , break-mark
                     write! $ []
-                      :: :vertex v3-list-0 (* 1 w) a-line
-                      :: :vertex (v3-to-list a) (* 0.1 w) a-line
+                      app.comp.container/RotorPoint :vertex v3-list-0 (* 1 w) a-line
+                      app.comp.container/RotorPoint :vertex (v3-to-list a) (* 0.1 w) a-line
                       , break-mark
                     grid-perp-to a write! (* 0.2 w) a-line 47
                     write! $ []
-                      :: :vertex v3-list-0 (* 0.5 w) b-line
-                      :: :vertex (v3-to-list b) (* 0.5 w) b-line
+                      app.comp.container/RotorPoint :vertex v3-list-0 (* 0.5 w) b-line
+                      app.comp.container/RotorPoint :vertex (v3-to-list b) (* 0.5 w) b-line
                       , break-mark
                     grid-perp-to b write! (* 0.2 w) b-line 31
                   :shader lines-wgsl
@@ -119,10 +134,10 @@
                 let
                     d $ v-scale v1 x
                   write! $ []
-                    :: :vertex
+                    app.comp.container/RotorPoint :vertex
                       v3-to-list $ v+ d $ v-scale v2 n
                       , w m
-                    :: :vertex
+                    app.comp.container/RotorPoint :vertex
                       v3-to-list $ v+ d $ v-scale v2 (negate n)
                       , w m
                     , break-mark
@@ -133,16 +148,16 @@
                 let
                     d $ v-scale v2 x
                   write! $ []
-                    :: :vertex
+                    app.comp.container/RotorPoint :vertex
                       v3-to-list $ v+ d $ v-scale v1 n
                       , w m
-                    :: :vertex
+                    app.comp.container/RotorPoint :vertex
                       v3-to-list $ v+ d $ v-scale v1 (negate n)
                       , w m
                     , break-mark
           :examples $ []
           :schema $ quote $ Fn quaternion.vector/V3
-            Fn (List Enum) (-> Unit)
+            Fn (List app.comp.container/PolylineItem) (-> Unit)
             , Number Number Number (-> Unit)
         'v3-list-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def v3-list-0 ([] 0 0 0)
@@ -220,7 +235,7 @@
             if dev? $ load-console-formatter!
             js-await $ initializeContext
             initializeCanvasTextures
-            reset-clear-color! $ .unwrap-or bg-color $ :: :rgba 0.18 0.2 0.36 1
+            reset-clear-color! $ .unwrap-or bg-color $ lagopus.config/ClearColor :rgba 0.18 0.2 0.36 1
             render-app!
             renderControl
             startControlLoop 10 onControlEvent
