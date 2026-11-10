@@ -16,7 +16,7 @@
           :schema $ quote UnionDef
         'RotorPoint $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum RotorPoint
-            :vertex (List Number) Number Number
+            :vertex (Tuple Number Number Number) Number Number
           :examples $ []
           :schema $ quote EnumDef
         'as-v3-list $ %{} 'CodeEntry
@@ -24,10 +24,10 @@
           :code $ quote $ defn as-v3-list (v)
             match v $
               :ga3 s x y z xy yz zx xyz
-              [] x y z
+              assert-type ([] x y z) (Tuple Number Number Number)
           :examples $ []
           :schema $ quote $ Fn geometric.core/Ga3
-            -> $ List Number
+            -> $ Tuple Number Number Number
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
             group nil (comp-axis)
@@ -101,35 +101,36 @@
             Fn (List app.comp.container/PolylineItem) (-> Unit)
             , Number Number Number (-> Unit)
         'v3-list-0 $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ def v3-list-0 ([] 0 0 0)
+          :code $ quote $ def v3-list-0
+            assert-type ([] 0 0 0) (Tuple Number Number Number)
           :examples $ []
-          :schema $ quote $ List Number
+          :schema $ quote $ Tuple Number Number Number
         'v3-to-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn v3-to-list (v)
             match v $
               :v3 x y z
-              [] x y z
+              assert-type ([] x y z) (Tuple Number Number Number)
           :examples $ []
           :schema $ quote $ Fn quaternion.vector/V3
-            -> $ List Number
+            -> $ Tuple Number Number Number
         'write-rotor! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn write-rotor! (store write!)
             let
-                p0 $ [] 80 40 0
-                p1 $ [] 80 120 0
-                p2 $ [] 120 120 40
-                p3 $ [] 160 40 0
+                p0 $ assert-type ([] 80 40 0) (Tuple Number Number Number)
+                p1 $ assert-type ([] 80 120 0) (Tuple Number Number Number)
+                p2 $ assert-type ([] 120 120 40) (Tuple Number Number Number)
+                p3 $ assert-type ([] 160 40 0) (Tuple Number Number Number)
                 w 2
                 a $ :control-a store
                 b $ :control-b store
                 use-rotor-a $ fn (p)
-                  hint-fn $ Fn (List Number)
-                    -> $ List Number
+                  hint-fn $ Fn (Tuple Number Number Number)
+                    -> $ Tuple Number Number Number
                   as-v3-list $ ga3:reflect (ga3:from-v3-list p)
                     ga3:from-v3-list $ v3-to-list a
                 use-rotor-ab $ fn (p)
-                  hint-fn $ Fn (List Number)
-                    -> $ List Number
+                  hint-fn $ Fn (Tuple Number Number Number)
+                    -> $ Tuple Number Number Number
                   as-v3-list $ ga3:reflect
                     ga3:reflect (ga3:from-v3-list p)
                       ga3:from-v3-list $ v3-to-list a
