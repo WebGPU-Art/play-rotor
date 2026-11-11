@@ -38,7 +38,7 @@
                   :size 8
                 fn (move d!)
                   hint-fn $ Fn quaternion.vector/V3
-                    Fn app.state/Op $ -> Unit
+                    Fn Op $ -> Unit
                     -> Unit
                   d! $ Op :control-a move
               comp-drag-point
@@ -48,13 +48,13 @@
                   :size 8
                 fn (move d!)
                   hint-fn $ Fn quaternion.vector/V3
-                    Fn app.state/Op $ -> Unit
+                    Fn Op $ -> Unit
                     -> Unit
                   d! $ Op :control-b move
               comp-polylines-marked $ {}
                 :writer $ fn (write!)
                   hint-fn $ Fn
-                    Fn (List app.comp.container/PolylineItem) (-> Unit)
+                    Fn (List PolylineItem) (-> Unit)
                     -> Unit
                   write-rotor! store write!
                 :shader lines-wgsl
@@ -189,7 +189,7 @@
                   reset! *segments $ append @*segments vertices
                   , &unit
               write-rotor! @app.main/*store $ fn (items)
-                hint-fn $ Fn (List app.comp.container/PolylineItem) (-> Unit)
+                hint-fn $ Fn (List PolylineItem) (-> Unit)
                 &doseq (item items)
                   match item
                     (app.comp.container/RotorPoint vertex) (lagopus.comp.curves/build-polyline-points-marked *previous vertex collect!)
