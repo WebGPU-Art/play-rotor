@@ -98,7 +98,7 @@
                     , break-mark
           :examples $ []
           :schema $ quote $ Fn quaternion.vector/V3
-            Fn (List app.comp.container/PolylineItem) (-> Unit)
+            Fn (List PolylineItem) (-> Unit)
             , Number Number Number (-> Unit)
         'v3-list-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def v3-list-0
@@ -177,11 +177,11 @@
               grid-perp-to b write! (* 0.2 w) b-line 31
           :examples $ []
           :schema $ quote $ Fn app.state/Store
-            Fn (List app.comp.container/PolylineItem) (-> Unit)
+            Fn (List PolylineItem) (-> Unit)
             -> Unit
           :tests $ [] $ %{} 'TestEntry (:name |default-polyline-segments)
             :code $ quote $ let
-                *previous $ ref $ assert-type (Option :none) (Option lagopus.comp.curves/MarkedPolylinePrevious)
+                *previous $ ref $ assert-type None (Option lagopus.comp.curves/MarkedPolylinePrevious)
                 *segments $ ref $ assert-type ([])
                   List $ List lagopus.comp.curves/MarkedPolylineVertex
                 collect! $ fn (vertices)
@@ -216,7 +216,7 @@
                 assert= 5.1 $ match
                   .unwrap $ nth second-grid 0
                   (:vertex _ _ _ _ mark) mark
-              assert= (Option :none) @*previous
+              assert= None @*previous
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.container
           :require
@@ -257,7 +257,7 @@
           :code $ quote $ defref *store
             Store :tab :cube :control-a (v3 200 10 0) :control-b $ v3 400 80 -80
           :examples $ []
-          :schema $ quote $ Ref app.state/Store
+          :schema $ quote $ Ref Store
         'canvas $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def canvas (query-canvas!)
           :examples $ []
@@ -275,7 +275,7 @@
               if (not= next-store store) (reset! *store next-store)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn app.state/Op (-> Unit)
+          :schema $ quote $ Fn Op (-> Unit)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (hint-fn Async)
             if dev? $ load-console-formatter!
