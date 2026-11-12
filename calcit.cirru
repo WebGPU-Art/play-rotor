@@ -38,7 +38,7 @@
                   :size 8
                 fn (move d!)
                   hint-fn $ Fn quaternion.vector/V3
-                    Fn app.state/Op $ -> Unit
+                    Fn Op $ -> Unit
                     -> Unit
                   d! $ Op :control-a move
               comp-drag-point
@@ -48,13 +48,13 @@
                   :size 8
                 fn (move d!)
                   hint-fn $ Fn quaternion.vector/V3
-                    Fn app.state/Op $ -> Unit
+                    Fn Op $ -> Unit
                     -> Unit
                   d! $ Op :control-b move
               comp-polylines-marked $ {}
                 :writer $ fn (write!)
                   hint-fn $ Fn
-                    Fn (List app.comp.container/PolylineItem) (-> Unit)
+                    Fn (List PolylineItem) (-> Unit)
                     -> Unit
                   write-rotor! store write!
                 :shader lines-wgsl
@@ -189,7 +189,7 @@
                   reset! *segments $ append @*segments vertices
                   , &unit
               write-rotor! @app.main/*store $ fn (items)
-                hint-fn $ Fn (List app.comp.container/PolylineItem) (-> Unit)
+                hint-fn $ Fn (List PolylineItem) (-> Unit)
                 &doseq (item items)
                   match item
                     (app.comp.container/RotorPoint vertex) (lagopus.comp.curves/build-polyline-points-marked *previous vertex collect!)
@@ -275,7 +275,7 @@
               if (not= next-store store) (reset! *store next-store)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Op (-> Unit)
+          :schema $ quote $ Fn Op (-> Unit) (:features :io :state)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (hint-fn Async)
             if dev? $ load-console-formatter!
@@ -294,7 +294,7 @@
             paintLagopusTree
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
@@ -305,7 +305,7 @@
               hud! |error build-errors
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             let
@@ -314,7 +314,7 @@
               paintLagopusTree
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
