@@ -4,7 +4,7 @@
 
 ### Workflow
 
-使用者影响：CLI / `@calcit/procs` 配对正式 **0.41.1**，需要重新安装依赖并生成 JS。
+使用者影响：CLI / `@calcit/procs` 配对正式 **0.42.0**，需要重新安装依赖并生成 JS。
 四个点、两个拖动控制点、反射公式、向量名义身份和 `hud!` 页面报错保持。
 
 根依赖配对 Memof 0.0.47、Geometric 0.0.19、Quaternion 0.2.23、JS FFI 0.2.13
