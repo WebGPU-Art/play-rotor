@@ -5,7 +5,7 @@
   :entries $ {} $ :default
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
-      :modules $ [] |memof/ |quaternion/ |lagopus/ |geometric/ |js-ffi/
+      :modules $ [] |quaternion/ |lagopus/ |geometric/ |js-ffi/
       :type-slots $ {}
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
@@ -225,7 +225,6 @@
             lagopus.comp.button :refer $ comp-button comp-drag-point
             lagopus.comp.curves :refer $ comp-curves comp-axis comp-polylines comp-polylines-marked break-mark
             lagopus.comp.spots :refer $ comp-spots
-            memof.once :refer $ memof1-call
             geometric.core :refer $ ga3:from-v3-list ga3:as-v3-list ga3:reflect ga3:from-v3
             lagopus.comp.cube :refer $ comp-cube
             quaternion.vector :refer $ v-scale v+ v-cross v-normalize v3
@@ -298,7 +297,7 @@
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (nil? build-errors)
-              do (reset-memof1-caches!) (render-app!) (remove-watch! *store :change)
+              do (render-app!) (remove-watch! *store :change)
                 add-watch! *store :change $ fn (next store) (render-app!)
                 println |Reloaded.
                 hud! |ok~ |OK
@@ -324,7 +323,6 @@
             app.config :refer $ dev? remote-control?
             |bottom-tip :default hud!
             |./calcit.build-errors :default build-errors
-            memof.once :refer $ reset-memof1-caches!
             lagopus.util :refer $ handle-compilation reset-clear-color!
             lagopus.config :refer $ bg-color
             |@triadica/lagopus/lib/remote-control.mjs :refer $ setupRemoteControl
