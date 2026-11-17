@@ -59,7 +59,7 @@
                   write-rotor! store write!
                 :shader lines-wgsl
           :examples $ []
-          :schema $ quote $ Fn app.state/Store (-> JsObject)
+          :schema $ quote $ Fn app.state/Store (-> JsObject) (:features :io :state)
         'grid-perp-to $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn grid-perp-to (v write! w m scale)
             let
@@ -99,7 +99,7 @@
           :examples $ []
           :schema $ quote $ Fn quaternion.vector/V3
             Fn (List PolylineItem) (-> Unit)
-            , Number Number Number (-> Unit)
+            , Number Number Number (-> Unit) (:features :io)
         'v3-list-0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def v3-list-0
             assert-type ([] 0 0 0) (Tuple Number Number Number)
@@ -179,6 +179,7 @@
           :schema $ quote $ Fn app.state/Store
             Fn (List PolylineItem) (-> Unit)
             -> Unit
+            :features :io
           :tests $ [] $ %{} 'TestEntry (:name |default-polyline-segments)
             :code $ quote $ let
                 *previous $ ref $ assert-type None (Option lagopus.comp.curves/MarkedPolylinePrevious)
