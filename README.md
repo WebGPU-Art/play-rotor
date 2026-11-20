@@ -7,7 +7,7 @@
 使用者影响：CLI / `@calcit/procs` 配对正式 **0.44.0**，需要重新安装依赖并生成 JS。
 四个点、两个拖动控制点、反射公式、向量名义身份和 `hud!` 页面报错保持。
 
-根依赖配对 Geometric 0.0.20、Quaternion 0.2.23、JS FFI 0.2.13 和 Lagopus 0.5.17。折线写入接收具名顶点与 Lagopus 分段标记的 `PolylineItem` union，
+根依赖配对 Geometric 0.0.21、Quaternion 0.2.23、JS FFI 0.2.13 和 Lagopus 0.5.17。Geometric 0.0.21 配对 Calcit 0.44，原 0.0.20 配对 0.43；两版的 Geometric Snapshot 相同。折线写入接收具名顶点与 Lagopus 分段标记的 `PolylineItem` union，
 保留原顶点次序和分段位置。相关写入合同见 [Lagopus #41](https://github.com/WebGPU-Art/lagopus/pull/41)。
 
 原 0.31 迁移中的 `defref`、坐标 List 与两类 V3 的受检转换、-9…9 网格顺序保持。
