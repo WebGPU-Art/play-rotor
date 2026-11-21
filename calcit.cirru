@@ -30,7 +30,7 @@
             -> $ Tuple Number Number Number
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-container (store)
-            group nil (comp-axis)
+            group ({}) (comp-axis)
               comp-drag-point
                 {}
                   :position $ v3-to-list $ :control-a store

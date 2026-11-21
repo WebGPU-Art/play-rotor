@@ -3,6 +3,6 @@
   :version |0.0.1
   :dependencies $ {}
     |calcit-lang/geometric |0.0.21
-    |calcit-lang/quaternion |0.2.23
-    |WebGPU-Art/lagopus |0.5.17
-    |calcit-lang/js-ffi |0.2.13
+    |calcit-lang/quaternion |0.2.26
+    |WebGPU-Art/lagopus |0.5.18
+    |calcit-lang/js-ffi |0.2.19
