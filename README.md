@@ -4,7 +4,7 @@
 
 ### Workflow
 
-使用者影响：CLI / `@calcit/procs` 配对正式 **0.44.0**，需要重新安装依赖并生成 JS。
+使用者影响：CLI / `@calcit/procs` 配对正式 **0.45.0**，需要重新安装依赖并生成 JS。
 四个点、两个拖动控制点、反射公式、向量名义身份和 `hud!` 页面报错保持。
 
 根依赖配对 Geometric 0.0.21、Quaternion 0.2.26、JS FFI 0.2.19 和 Lagopus 0.5.18。Geometric 0.0.21 配对 Calcit 0.44，原 0.0.20 配对 0.43；两版的 Geometric Snapshot 相同。折线写入接收具名顶点与 Lagopus 分段标记的 `PolylineItem` union，
